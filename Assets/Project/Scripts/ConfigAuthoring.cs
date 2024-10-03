@@ -1,6 +1,7 @@
 using Unity.Entities;
 using Unity.Mathematics;
 using UnityEngine;
+using UnityEngine.InputSystem;
 
 namespace Project.Scripts
 {
@@ -16,6 +17,7 @@ namespace Project.Scripts
         public float HandleSpeed;
         public float HandleMaxSize;
         public float HandleMinSize;
+        public InputActionAsset TouchInput;
 
         [Header("Bricks")]
         public GameObject BrickPrefab; 
@@ -41,6 +43,8 @@ namespace Project.Scripts
                     LeftBound = authoring.LeftBound,
                     RightBound = authoring.RightBound,
                     HandleSpeed = authoring.HandleSpeed,
+                    HandleMaxSize = authoring.HandleMaxSize,
+                    HandleMinSize = authoring.HandleMinSize,
                     BrickPrefab = GetEntity(authoring.BrickPrefab, TransformUsageFlags.Dynamic),
                     BricksTopLeftPos = authoring.BricksTopLeftPos,
                     TotalColumns = authoring.TotalColumns,

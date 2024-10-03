@@ -449,9 +449,10 @@ MonoBehaviour:
   BottomBound: -30
   LeftBound: -8.5
   RightBound: 8.5
-  HandleSpeed: 10
-  HandleMaxSize: 0
-  HandleMinSize: 0
+  HandleSpeed: 1
+  HandleMaxSize: 10
+  HandleMinSize: 2
+  TouchInput: {fileID: 0}
   BrickPrefab: {fileID: 7568268068066195790, guid: a7ee27fe10bbd9047b233160dc2bca8b,
     type: 3}
   BricksTopLeftPos:

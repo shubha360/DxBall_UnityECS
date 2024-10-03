@@ -47,7 +47,7 @@ namespace Project.Scripts
 				    // handle increase
 				    if (power.ValueRO.Type == 0)
 				    {
-					    if (handleScale.x < 10.0f)
+					    if (handleScale.x < config.HandleMaxSize)
 					    {
 						    handleScale.x = handleScale.x + 1.0f;
 						    handleMatrix.Value.c0.x = handleScale.x;
@@ -56,7 +56,7 @@ namespace Project.Scripts
 				    // handle decrease
 				    else if (power.ValueRO.Type == 1)
 				    {
-					    if (handleScale.x > 2.0f)
+					    if (handleScale.x > config.HandleMinSize)
 					    {
 						    handleScale.x = handleScale.x - 1.0f;
 						    handleMatrix.Value.c0.x = handleScale.x;

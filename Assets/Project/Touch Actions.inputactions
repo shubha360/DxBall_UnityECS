@@ -1,0 +1,34 @@
+{
+    "name": "Touch Actions",
+    "maps": [
+        {
+            "name": "Touch",
+            "id": "c5e11218-076d-4805-829a-e761400fdafa",
+            "actions": [
+                {
+                    "name": "Drag",
+                    "type": "Value",
+                    "id": "86154904-a610-4ab5-9d5b-58d1faf2b5bf",
+                    "expectedControlType": "Vector2",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": true
+                }
+            ],
+            "bindings": [
+                {
+                    "name": "",
+                    "id": "74aa96ac-341d-45ac-af89-f4c31b1cdbc1",
+                    "path": "<Touchscreen>/primaryTouch/delta",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "Drag",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                }
+            ]
+        }
+    ],
+    "controlSchemes": []
+}

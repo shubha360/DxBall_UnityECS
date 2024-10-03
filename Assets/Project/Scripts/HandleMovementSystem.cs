@@ -7,29 +7,28 @@ using UnityEngine;
 namespace Project.Scripts
 {
     [UpdateBefore(typeof(TransformSystemGroup))]
-    public partial struct HandleMovementSystem : ISystem
+    public partial class HandleMovementSystem : SystemBase
     {
-        [BurstCompile]
+        public float2 TouchDelta; 
+        
         public void OnCreate(ref SystemState state)
         {
             state.RequireForUpdate<Handle>();
             state.RequireForUpdate<Config>();
         }
-    
-        [BurstCompile]
-        public void OnUpdate(ref SystemState state)
+
+        protected override void OnUpdate()
         {
             var config = SystemAPI.GetSingleton<Config>();
             var handle = SystemAPI.GetSingletonEntity<Handle>();
             
-            var input = Input.GetAxis("Horizontal") * SystemAPI.Time.DeltaTime * config.HandleSpeed;
-            if (!(input < float.Epsilon) && !(input > float.Epsilon)) return;
+            if (!(TouchDelta.x < float.Epsilon) && !(TouchDelta.x > float.Epsilon)) return;
             
-            var handleMatrix = state.EntityManager.GetComponentData<PostTransformMatrix>(handle);
-            var scaleX = handleMatrix.Value.Scale().x;
+            var handleMatrix = SystemAPI.GetComponentRO<PostTransformMatrix>(handle);
+            var scaleX = handleMatrix.ValueRO.Value.Scale().x;
 
-            var handleTransform = state.EntityManager.GetComponentData<LocalTransform>(handle);
-            var newPosX = handleTransform.Position.x + input;
+            var handleTransform = SystemAPI.GetComponentRW<LocalTransform>(handle);
+            var newPosX = handleTransform.ValueRO.Position.x + (TouchDelta.x * config.HandleSpeed * SystemAPI.Time.DeltaTime);
 
             if (newPosX - (scaleX / 2.0f) < config.LeftBound)
             {
@@ -40,14 +39,10 @@ namespace Project.Scripts
                 newPosX = config.RightBound - (scaleX / 2.0f);
             }
 
-            var newPos = new float3(newPosX, handleTransform.Position.y, handleTransform.Position.z);
+            var newPos = new float3(newPosX, handleTransform.ValueRO.Position.y, handleTransform.ValueRO.Position.z);
+            handleTransform.ValueRW.Position = newPos;
             
-            state.EntityManager.SetComponentData(handle, new LocalTransform
-            {
-                Position = newPos,
-                Scale = handleTransform.Scale,
-                Rotation = handleTransform.Rotation
-            });
+            TouchDelta = float2.zero;
         }
     }
 }
