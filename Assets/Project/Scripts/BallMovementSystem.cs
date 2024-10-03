@@ -34,6 +34,8 @@ namespace Project.Scripts
             var ballTransform = state.EntityManager.GetComponentData<LocalTransform>(ball);
             var velocity = state.EntityManager.GetComponentData<Velocity>(ball);
 
+            var goThrough = SystemAPI.IsComponentEnabled<GoThrough>(ball);
+
             var newPos = ballTransform.Position.xy + (velocity.Direction * velocity.Speed * SystemAPI.Time.DeltaTime);
 
             if (newPos.y > config.TopBound)
@@ -93,11 +95,12 @@ namespace Project.Scripts
                     var powerUpFlag = _random.NextBool();
                     if (powerUpFlag)
                     {
-                        var puType = _random.NextInt(0, 2);
+                        var puType = _random.NextInt(0, 3);
 
                         var prefab = config.PowerupIncrease;
 
                         if (puType == 1) prefab = config.PowerupDecrease;
+                        else if (puType == 2) prefab = config.PowerupGoThrough;
                         
                         var powerup = state.EntityManager.Instantiate(prefab);
                         state.EntityManager.SetComponentData(powerup, new LocalTransform
@@ -113,21 +116,25 @@ namespace Project.Scripts
                     }
 
                     ecb.DestroyEntity(entity);
-                    
-                    // horizontal hit
-                    if (Mathf.Approximately(_closestPoint.y, newPos.y))
-                        velocity.Direction.x = -velocity.Direction.x;
-                    
-                    // vertical hit
-                    else if (Mathf.Approximately(_closestPoint.x, newPos.x))
-                        velocity.Direction.y = -velocity.Direction.y;
 
-                    // hit in the corner
-                    else
+                    if (!goThrough)
                     {
-                        velocity.Direction.x = -velocity.Direction.x;
-                        velocity.Direction.y = -velocity.Direction.y;
+                        // horizontal hit
+                        if (Mathf.Approximately(_closestPoint.y, newPos.y))
+                            velocity.Direction.x = -velocity.Direction.x;
+
+                        // vertical hit
+                        else if (Mathf.Approximately(_closestPoint.x, newPos.x))
+                            velocity.Direction.y = -velocity.Direction.y;
+
+                        // hit in the corner
+                        else
+                        {
+                            velocity.Direction.x = -velocity.Direction.x;
+                            velocity.Direction.y = -velocity.Direction.y;
+                        }
                     }
+
                     break;
                 }
             }

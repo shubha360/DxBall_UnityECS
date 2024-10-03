@@ -10,6 +10,7 @@ namespace Project.Scripts
     {
 	    public void OnCreate(ref SystemState state)
 	    {
+		    state.RequireForUpdate<Ball>();
 		    state.RequireForUpdate<Handle>();
 		    state.RequireForUpdate<Config>();
 	    }
@@ -18,6 +19,8 @@ namespace Project.Scripts
 	    {
 		    var config = SystemAPI.GetSingleton<Config>();
 		    var handle = SystemAPI.GetSingletonEntity<Handle>();
+		    var ball = SystemAPI.GetSingletonEntity<Ball>();
+		    
 		    var handlePosition = state.EntityManager.GetComponentData<LocalTransform>(handle).Position;
 		    var handleMatrix = state.EntityManager.GetComponentData<PostTransformMatrix>(handle);
 		    var handleScale = handleMatrix.Value.Scale();
@@ -44,14 +47,28 @@ namespace Project.Scripts
 				    // handle increase
 				    if (power.ValueRO.Type == 0)
 				    {
-					    handleScale.x = handleScale.x + 1.0f;
-					    handleMatrix.Value.c0.x = handleScale.x;
+					    if (handleScale.x < 10.0f)
+					    {
+						    handleScale.x = handleScale.x + 1.0f;
+						    handleMatrix.Value.c0.x = handleScale.x;
+					    }
 				    }
 				    // handle decrease
 				    else if (power.ValueRO.Type == 1)
 				    {
-					    handleScale.x = handleScale.x - 1.0f;
-					    handleMatrix.Value.c0.x = handleScale.x;
+					    if (handleScale.x > 2.0f)
+					    {
+						    handleScale.x = handleScale.x - 1.0f;
+						    handleMatrix.Value.c0.x = handleScale.x;
+					    }
+				    }
+				    // go through
+				    else if (power.ValueRO.Type == 2)
+				    {
+					    if (!SystemAPI.IsComponentEnabled<GoThrough>(ball))
+					    {
+						    SystemAPI.SetComponentEnabled<GoThrough>(ball, true);
+					    }
 				    }
 				    
 				    state.EntityManager.SetComponentData(handle, new PostTransformMatrix

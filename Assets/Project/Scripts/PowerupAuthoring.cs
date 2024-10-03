@@ -11,10 +11,7 @@ namespace Project.Scripts
             public override void Bake(PowerupAuthoring authoring)
             {
                 var entity = GetEntity(TransformUsageFlags.Dynamic);
-                AddComponent(entity, new Powerup
-                {
-                    Type = 0
-                });
+                AddComponent(entity, new Powerup());
                 AddComponent(entity, new Velocity
                 {
                     Speed = 10.0f,

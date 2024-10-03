@@ -20,6 +20,8 @@ namespace Project.Scripts
                     Speed = authoring.Speed,
                     Direction = authoring.Direction
                 });
+                AddComponent(entity, new GoThrough());
+                SetComponentEnabled<GoThrough>(entity, false);
             }
         }
     }
@@ -33,4 +35,8 @@ namespace Project.Scripts
         public float Speed;
         public float2 Direction;
     }
+
+    public struct GoThrough : IComponentData, IEnableableComponent
+    {
+    } 
 }
